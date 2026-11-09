@@ -1,0 +1,18 @@
+# Core AI & Computer Vision
+ultralytics>=8.2.0
+supervision>=0.20.0
+opencv-python>=4.9.0
+
+# Web Application & Dashboard
+streamlit>=1.35.0
+
+# FastAPI backend and ASGI server
+fastapi>=0.111.0
+uvicorn>=0.30.0
+python-multipart>=0.0.9
+
+# Data Processing & Visualization
+pandas>=2.0.0
+plotly>=5.20.0
+numpy>=1.24.0
+Pillow>=10.0.0

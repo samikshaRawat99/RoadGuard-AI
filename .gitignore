@@ -1,0 +1,28 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Large model weights (keep downloaded weights out of git)
+yolo11n.pt
+*.pt
+*.onnx
+
+# Data & processed output videos (avoid uploading heavy media to GitHub)
+outputs/processed_videos/*.mp4
+outputs/uploads/
+outputs/calibration/
+data/videos/highway.mp4
+
+# OS & editor artifacts
+.DS_Store
+.vscode/
+.idea/

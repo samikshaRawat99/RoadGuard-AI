@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoadGuard AI — Traffic Monitoring Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+  <!-- ================================================================= -->
+  <!-- 1. HEADER SECTION                                                 -->
+  <!-- ================================================================= -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="logo-icon">🛡️</div>
+        <div>
+          <h1 class="brand-title">RoadGuard AI</h1>
+          <p class="brand-subtitle">Intelligent Road Safety &amp; Vehicle Monitoring System</p>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#overview" class="nav-item">Overview</a>
+        <a href="#input-section" class="nav-item">Video Input</a>
+        <a href="#modules-section" class="nav-item">Modules</a>
+        <a href="#results-section" class="nav-item">Results</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- ================================================================= -->
+    <!-- 2. OVERVIEW CARDS                                                 -->
+    <!-- ================================================================= -->
+    <section id="overview" class="section">
+      <div class="cards-grid">
+        <div class="card stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Detections</span>
+            <span class="stat-icon">🚗</span>
+          </div>
+          <div class="stat-value" id="statTotalVehicles">--</div>
+          <div class="stat-caption">Cumulative across frames</div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Vehicles Tracked</span>
+            <span class="stat-icon">📍</span>
+          </div>
+          <div class="stat-value" id="statTrackedVehicles">--</div>
+          <div class="stat-caption">Assigned unique IDs</div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Average Speed</span>
+            <span class="stat-icon">⚡</span>
+          </div>
+          <div class="stat-value" id="statAvgSpeed">-- <span class="unit">px/s</span></div>
+          <div class="stat-caption">Mean speed across tracked vehicles</div>
+        </div>
+
+        <div class="card stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Violations Detected</span>
+            <span class="stat-icon">⚠️</span>
+          </div>
+          <div class="stat-value" id="statViolations">--</div>
+          <div class="stat-caption">Stage 6+ feature integration</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- 3. VIDEO INPUT & PROCESSING CONTROLS                              -->
+    <!-- ================================================================= -->
+    <section id="input-section" class="section">
+      <h2 class="section-title">Video Input &amp; Controls</h2>
+
+      <div class="input-controls-grid">
+        <!-- Left: Upload Box -->
+        <div class="card upload-card">
+          <label for="videoInput" class="upload-dropzone">
+            <div class="upload-icon">📁</div>
+            <div class="upload-title">Choose Highway Video</div>
+            <div class="upload-hint">Supports MP4, MOV, AVI formats</div>
+            <input type="file" id="videoInput" accept=".mp4,.mov,.avi,video/mp4,video/quicktime,video/x-msvideo"
+              class="file-input">
+          </label>
+
+          <div class="file-info-bar">
+            <span class="file-info-label">Selected file:</span>
+            <span id="fileNameDisplay" class="file-name">None</span>
+          </div>
+
+          <!-- 4. Processing Controls -->
+          <div class="control-buttons">
+            <button id="startBtn" class="btn btn-primary" disabled>
+              <span>▶</span> Start Processing
+            </button>
+            <button id="stopBtn" class="btn btn-secondary" disabled>
+              <span>⏹</span> Stop Processing
+            </button>
+          </div>
+
+          <!-- Status Indicator -->
+          <div id="statusIndicator" class="status-indicator status-idle">
+            <span class="status-dot"></span>
+            <span id="statusText">System Idle — Select a video to begin</span>
+          </div>
+        </div>
+
+        <!-- Right: Source Video Preview Player -->
+        <div class="card preview-card">
+          <div class="card-header">
+            <h3 class="card-title">Video Preview</h3>
+            <span class="badge badge-neutral">Input Source</span>
+          </div>
+          <div class="video-container">
+            <div id="emptyPreviewState" class="empty-preview">
+              <span class="empty-icon">🎥</span>
+              <p>No video selected yet</p>
+              <p class="empty-subtext">Uploaded video will preview here</p>
+            </div>
+            <video id="videoPreview" controls class="video-element hidden"></video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- 5. DETECTION MODULES STATUS                                       -->
+    <!-- ================================================================= -->
+    <section id="modules-section" class="section">
+      <h2 class="section-title">Detection Modules Pipeline</h2>
+      <p class="section-subtitle">Real-time status of RoadGuard AI computer vision modules</p>
+
+      <div class="modules-grid">
+        <div class="card module-card">
+          <div class="module-header">
+            <span class="module-icon">🔍</span>
+            <span class="badge badge-success">Implemented</span>
+          </div>
+          <h3 class="module-title">Vehicle Detection</h3>
+          <p class="module-desc">Ultralytics YOLO11n pretrained model filtering cars, trucks, buses, and motorcycles.
+          </p>
+          <div class="module-meta">Module: <code>src/detection.py</code></div>
+        </div>
+
+        <div class="card module-card">
+          <div class="module-header">
+            <span class="module-icon">🎯</span>
+            <span class="badge badge-success">Implemented</span>
+          </div>
+          <h3 class="module-title">Vehicle Tracking</h3>
+          <p class="module-desc">ByteTrack multi-object tracker assigning persistent unique tracking IDs across frames.
+          </p>
+          <div class="module-meta">Module: <code>src/tracking.py</code></div>
+        </div>
+
+        <div class="card module-card">
+          <div class="module-header">
+            <span class="module-icon">⚡</span>
+            <span class="badge badge-warning">Partially Implemented</span>
+          </div>
+          <h3 class="module-title">Speed Estimation</h3>
+          <p class="module-desc">Pixel displacement prototype; real-world km/h estimation requires camera calibration.
+          </p>
+          <div class="module-meta">Module: <code>src/speed_estimation.py</code></div>
+        </div>
+
+        <div class="card module-card">
+          <div class="module-header">
+            <span class="module-icon">⚠️</span>
+            <span class="badge badge-success">Implemented</span>
+          </div>
+          <h3 class="module-title">Speed Violation Engine</h3>
+          <p class="module-desc">Monitors vehicle velocities in px/s against highway limits, logging evidence and highlighting violators in red.</p>
+          <div class="module-meta">Module: <code>src/violations.py</code></div>
+        </div>
+
+        <div class="card module-card module-upcoming">
+          <div class="module-header">
+            <span class="module-icon">🛣️</span>
+            <span class="badge badge-neutral">Upcoming</span>
+          </div>
+          <h3 class="module-title">Lane Violation</h3>
+          <p class="module-desc">Monitors unauthorized lane departures and shoulder crossing violations.</p>
+          <div class="module-meta">Planned for Stage 8</div>
+        </div>
+
+        <div class="card module-card module-upcoming">
+          <div class="module-header">
+            <span class="module-icon">👥</span>
+            <span class="badge badge-neutral">Upcoming</span>
+          </div>
+          <h3 class="module-title">Triple Riding</h3>
+          <p class="module-desc">Detects two-wheelers carrying more than two passengers illegally.</p>
+          <div class="module-meta">Planned for Stage 9</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- 6. RESULTS & ANALYTICS PLACEHOLDERS                               -->
+    <!-- ================================================================= -->
+    <section id="results-section" class="section">
+      <h2 class="section-title">Results &amp; Evidence Log</h2>
+
+      <div class="results-grid">
+        <!-- Processed Video Display Space -->
+        <div class="card result-box">
+          <div class="card-header">
+            <h3 class="card-title">Processed Video Output</h3>
+            <span class="badge badge-neutral">Output Stream</span>
+          </div>
+          <div id="processedVideoContainer" class="result-placeholder">
+            <span class="placeholder-icon">🎬</span>
+            <p class="placeholder-title">Annotated Output Video</p>
+            <p class="placeholder-subtitle">Processed video with bounding boxes, tracking IDs, and speed overlays will
+              appear here.</p>
+          </div>
+        </div>
+
+        <!-- Vehicle Statistics & Evidence Logs -->
+        <div class="card result-box">
+          <div class="card-header">
+            <h3 class="card-title">Vehicle Logs &amp; Breakdown</h3>
+            <span class="badge badge-neutral">Analytics Panel</span>
+          </div>
+          <div id="analyticsContainer" class="result-placeholder">
+            <span class="placeholder-icon">📋</span>
+            <p class="placeholder-title">No Active Logs</p>
+            <p class="placeholder-subtitle">Vehicle category breakdown and session metrics will populate here upon processing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>RoadGuard AI — Academic Computer Vision Project</p>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+
+</html>
