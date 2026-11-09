@@ -63,6 +63,16 @@ def process_video(
         if output_dir:
             os.makedirs(output_dir, exist_ok=True)
 
+        # Resize high-resolution videos (e.g. 4K) to max 960px width to fit within
+        # cloud free-tier RAM (512MB) and speed up processing by 8x-10x
+        MAX_DIM = 960
+        scale = 1.0
+        if max(width, height) > MAX_DIM:
+            scale = MAX_DIM / max(width, height)
+            width = int(width * scale)
+            height = int(height * scale)
+            print(f"Downscaled resolution for fast cloud inference: {width}x{height} (scale: {scale:.2f})")
+
         fourcc = cv2.VideoWriter_fourcc(*"avc1")
         out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
@@ -92,6 +102,10 @@ def process_video(
             ret, frame = cap.read()
             if not ret:
                 break
+
+            # Resize frame to downscaled dimensions if scaling is active
+            if scale != 1.0:
+                frame = cv2.resize(frame, (width, height), interpolation=cv2.INTER_AREA)
 
             # 1. ByteTrack Tracking
             tracked_vehicles = track_vehicles(
