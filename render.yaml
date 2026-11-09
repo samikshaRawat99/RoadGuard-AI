@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: roadguard-ai
+    runtime: docker
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8000
